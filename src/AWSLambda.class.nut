@@ -35,7 +35,7 @@ class AWSLambda {
             contenttype = "application/json";
         }
 
-    local headers = {"Content-Type": contenttype };
+        local headers = {"Content-Type": contenttype };
         local body = (contenttype == "application/json") ? http.jsonencode(params.Payload) : params.Payload;
         _awsRequest.post(URL_PREFIX + params.FunctionName + "/invocations", headers, body, cb);
     }
