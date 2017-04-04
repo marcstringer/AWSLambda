@@ -5,3 +5,5 @@
 *.swp
 test*
 src/vars.nut
+AWSRequestV4.class.nut
+example/sample.agent.nut
