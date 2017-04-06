@@ -23,25 +23,6 @@ region                 | string         | AWS region (e.g. "us-east-1")
 accessKeyId            | string         | IAM Access Key ID
 secretAccessKey        | string         | IAM Secret Access Key
 
-### invoke(params, callback = null)
-
-Invokes lambda function. Please refer to the AWS Lambda [documentation](http://docs.aws.amazon.com/lambda/latest/dg/API_Invoke.html) for more details.
-
-The function takes the following parameters:
-
- Parameter         | Type           | Description
------------------- | -------------- | -----------
-params             | table          | Table of parameters (See API Reference)
-callback           | function       | Callback function that takes one parameter (response table)
-
-where `params` are:
-
-Parameter             | Type           | Description
---------------------- | -------------- | -----------
-functionName          | string         | Name of the function to be called
-payload               | string         | JSON that you want to provide to your Lambda function as input
-contentType           | string         | The payload content type. "application/json" by default.
-
 ## Example
 
 ```squirrel
@@ -53,21 +34,46 @@ const ACCESS_KEY_ID     = "YOUR_ACCES_KEY_ID";
 const SECRET_ACCESS_KEY = "YOUR_SECRET_ACCESS_KEY";
 
 local lambda = AWSLambda(AWS_LAMBDA_REGION, ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+```
+
+### invoke(params, callback = null)
+
+Invokes lambda function. Please refer to the AWS Lambda [documentation](http://docs.aws.amazon.com/lambda/latest/dg/API_Invoke.html) for more details.
+
+The function takes the following parameters:
+
+ Parameter         | Type           | Description
+------------------ | -------------- | -----------
+params             | table          | Table of parameters (See API Reference)
+callback           | function       | Callback function that takes one parameter (response table)
+
+where `params` include:
+
+Parameter             | Type           |Required| Description
+--------------------- | -------------- || -----------
+functionName          | string         |yes| Name of the Lambda function to be called
+payload               | string or table or integer|no| Data that you want to provide to your Lambda.
+contentType           | string         |no|The payload content type. "application/json" by default.
+
+## Example
+
+```squirrel
+//
 local body   = {"message" : "hello world!"};
 local params = {
-    "payload"      : http.jsonencode(body),
-    "functionName" : "RSALambda"
+    "payload"      : body,
+    "functionName" : "mySend"
 }
 
-function callback(result) {
+lambda.invoke(params, function () {
     local payload = http.jsondecode(result.body);
     if ("errorMessage" in payload) {
         server.log("[ERROR] " + payload.errorMessage);
     } else {
-        server.log("[SUCCEDED] base64encoded signature: " + payload.signature);
+        server.log("[SUCCEDED]: " + payload.transmit);
     }
-}
-lambda.invoke(params, callback);
+};
+
 ```
 
 # License
