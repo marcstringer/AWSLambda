@@ -64,10 +64,10 @@ local payload = { "message" : "Hello, world!" };
 local params  = { "payload" : payload, "functionName" : "mySend" };
 lambda.invoke(params, function (result) {
     local payload = http.jsondecode(result.body);
-    if ("errorMessage" in payload) {
-        server.error(payload.errorMessage);
+    if ("Message" in payload) {
+        server.error(payload.Message);
     } else {
-        server.log("[SUCCESS]: " + payload.message);
+        server.log("[SUCCESS]: " + payload.transmit);
     }
 }.bindenv(this))
 ```
